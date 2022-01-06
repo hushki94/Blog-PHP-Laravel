@@ -1,15 +1,16 @@
 <x-layout>
-    <x-setting heading="Publish New Post">
+    <x-setting :heading=" 'Edit Post: ' . $post->title">
 
         <x-panel>
-            <form method="POST" action="/admin/posts" enctype="multipart/form-data">
+            <form method="POST" action="/admin/posts/{{$post->id}}" enctype="multipart/form-data">
                 @csrf
+                @method('PATCH')
                 <div class="mb-6 mt-10">
                     <label class="block mb-2 uppercase font-bold text-xs text-gray-700" for="title">
                         Title
                     </label>
                     <input class="border border-gray-400 p-2 w-full" type="text" name="title" id="title"
-                        value="{{ old('title') }}" required>
+                        value="{{ $post->title }}" required>
                     @error('title')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
@@ -19,7 +20,7 @@
                         Slug
                     </label>
                     <input class="border border-gray-400 p-2 w-full" type="text" name="slug" id="slug"
-                        value="{{ old('slug') }}" required>
+                        value="{{ $post->slug }}" required>
                     @error('slug')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
@@ -29,17 +30,19 @@
                         Thumbnail
                     </label>
                     <input class="border border-gray-400 p-2 w-full" type="file" name="thumbnail" id="thumbnail"
-                        value="{{ old('thumbnail') }}" required>
+                        value="{{ $post->thumbnail }}">
+                        
                     @error('thumbnail')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
                 </div>
+                <img src="{{  asset("storage/".$post->thumbnail) }}" alt="" class="rounded-xl">
                 <div class="mb-6 mt-10">
                     <label class="block mb-2 uppercase font-bold text-xs text-gray-700" for="exerpt">
                         Excerpt
                     </label>
                     <textarea class="border border-gray-400 p-2 w-full" type="text" name="exerpt" id="exerpt" required>
-                    {{ old('exerpt') }}
+                    {{ $post->exerpt }}
                 </textarea>
                     @error('exerpt')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -52,11 +55,14 @@
                     </label>
                     <textarea class="border border-gray-400 p-2 w-full" type="text" name="body" id="body"
                         value="{{ old('body') }}" required>
-                    {{ old('body') }}
+                    {{ $post->body }}
                 </textarea>
                     @error('body')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
+                </div>
+                <div>
+                    <strong>Current Category:</strong> {{$post->category->name}}
                 </div>
 
                 <div class="mb-6 mt-10">
@@ -68,7 +74,10 @@
                             $categories = \App\Models\Category::all();
                         @endphp
                         @foreach ($categories as $category)
-                            <option value="{{ $category->id }}">{{ ucwords($category->name) }}</option>
+                            <option value="{{ $category->id }}"
+                                {{old('category_id' , $post->category_id)  == $category->id ? 'selected' : ''}}
+                                >
+                                {{ ucwords($category->name) }}</option>
 
                         @endforeach
                     </select>

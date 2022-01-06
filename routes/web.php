@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminPostController;
 use App\Http\Controllers\PostCommentController;
 use App\Http\Controllers\PotController;
 use App\Http\Controllers\RegisterController;
@@ -41,5 +42,13 @@ Route::post('logout', [sessionsController::class, 'destroy'])->middleware('auth'
 
 
 Route::get('admin/posts/create' , [PotController::class , 'create'])->middleware('admin');
+
+Route::get('admin/posts' , [AdminPostController::class , 'index'])->middleware('admin');
+
+Route::get('admin/posts/{post}/edit' , [AdminPostController::class , 'edit'])->middleware('admin');
+
+Route::patch('admin/posts/{post}' , [AdminPostController::class , 'update'])->middleware('admin');
+
+Route::delete('admin/posts/{post}' , [AdminPostController::class , 'destroy'])->middleware('admin');
 
 Route::post('admin/posts' , [PotController::class , 'store'])->middleware('admin');
