@@ -23,20 +23,23 @@
                             <button class="text-xs font-bold uppercase">Welcome, {{ auth()->user()->name }}</button>
 
                         </x-slot>
-                             <x-dropdown-item href="/admin/posts"
-                                   class="{{ request()->is('/admin/posts') ? 'text-blue-500' : '' }}">Dashboard
-                                </x-dropdown-item>
-                                <x-dropdown-item href="/admin/posts/create"
-                                    class="{{ request()->is('/admin/posts/create') ? 'text-blue-500' : '' }}">New Post
-                                </x-dropdown-item>
-                                <x-dropdown-item href="/" x-data="{}"
-                                    @click.prevent="document.querySelector('#logout-form').submit() ">Log Out
-                                </x-dropdown-item>
+                        @can('admin')
 
-                                <form id="logout-form" method="POST" action="/logout" class="hidden">
-                                    @csrf
+                            <x-dropdown-item href="/admin/posts"
+                                class="{{ request()->is('/admin/posts') ? 'text-blue-500' : '' }}">Dashboard
+                            </x-dropdown-item>
+                            <x-dropdown-item href="/admin/posts/create"
+                                class="{{ request()->is('/admin/posts/create') ? 'text-blue-500' : '' }}">New Post
+                            </x-dropdown-item>
+                        @endcan
+                        <x-dropdown-item href="/" x-data="{}"
+                            @click.prevent="document.querySelector('#logout-form').submit() ">Log Out
+                        </x-dropdown-item>
 
-                                </form>
+                        <form id="logout-form" method="POST" action="/logout" class="hidden">
+                            @csrf
+
+                        </form>
                     </x-dropdown>
                 @else
                     <a href="/register" class="text-xs font-bold uppercase">Register</a>
